@@ -1,33 +1,10 @@
-const { Given, When, Then } = require("cucumber");
-
-Given(
-  "an administrator account named {word} exists",
-  function (admin_account_exists) {
-    console.log("Admin exists, SUCCESS");
-  }
-);
-
-Given("I am logged in as {word}", function (admin_login) {
-  console.log("Admin logged in, SUCCESS");
-});
-
-When("I login as an entry {word}", function (login) {});
-When("I logout", function (logout) {});
+import { When, Then, Given } from "@badeball/cypress-cucumber-preprocessor";
 
 Given("I have a sample {word}", function (create_record) {});
-
-When("I click on {} tab", function (tab_name) {
-  document.getElementById(tab_name).click();
-});
-
-When("I click on {word} button", function (button_name) {
-  document.getElementById(button_name).click();
-});
 
 When("there is only one existing user", function () {});
 
 Then("I should see {word} entry in the result table", function (entry_id) {});
-When("I type in the field {word} text {}", function (field_id, content) {});
 Given("There is an entry {word}", function (entry_id) {});
 When("I open details for entry {word}", function (entry_id) {});
 Then(
