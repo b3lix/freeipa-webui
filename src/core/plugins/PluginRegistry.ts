@@ -1,4 +1,4 @@
-import { PluginModule, ExtensionPointId, ExtensionComponent } from './types';
+import { PluginModule, ExtensionPointId, ExtensionComponent } from "./types";
 
 /**
  * Singleton registry that manages all plugins and their extensions
@@ -6,7 +6,7 @@ import { PluginModule, ExtensionPointId, ExtensionComponent } from './types';
 class PluginRegistry {
   private plugins: Map<string, PluginModule> = new Map();
   private extensions: Map<string, ExtensionComponent[]> = new Map();
-  
+
   /**
    * Register a plugin and all its extensions
    */
@@ -15,16 +15,16 @@ class PluginRegistry {
       console.warn(`Plugin with ID "${plugin.id}" is already registered.`);
       return;
     }
-    
-    // Register the plugin
+
+    // register the plugin
     this.plugins.set(plugin.id, plugin);
-    
-    // Register all extensions from this plugin
+
+    // register all extensions from this plugin
     for (const extension of plugin.extensions) {
       this.registerExtension(extension);
     }
-    
-    // Initialize plugin if needed
+
+    // initialize plugin if needed
     if (plugin.initialize) {
       try {
         plugin.initialize();
@@ -32,55 +32,81 @@ class PluginRegistry {
         console.error(`Error initializing plugin "${plugin.id}":`, error);
       }
     }
-    
-    console.log(`Plugin "${plugin.name}" (${plugin.id}) registered successfully.`);
   }
-  
+
   /**
    * Register a single extension
    */
   private registerExtension(extension: ExtensionComponent): void {
     const { extensionPointId } = extension;
-    
-    if (!this.extensions.has(extensionPointId)) {
-      this.extensions.set(extensionPointId, []);
+
+    // Get the extension point ID string
+    const extensionPointIdString =
+      this.getExtensionPointIdString(extensionPointId);
+
+    if (!this.extensions.has(extensionPointIdString)) {
+      this.extensions.set(extensionPointIdString, []);
     }
-    
-    const extensions = this.extensions.get(extensionPointId) as ExtensionComponent[];
+
+    const extensions = this.extensions.get(
+      extensionPointIdString
+    ) as ExtensionComponent[];
     extensions.push(extension);
-    
-    // Sort by priority if provided (higher priority first)
+
+    // sort by priority if provided (higher priority first)
     extensions.sort((a, b) => (b.priority || 0) - (a.priority || 0));
   }
-  
+
   /**
    * Get all extensions for a specific extension point
    */
-  getExtensions(extensionPointId: ExtensionPointId): ExtensionComponent[] {
-    return this.extensions.get(extensionPointId) || [];
+  getExtensions(
+    extensionPointId: ExtensionPointId | string
+  ): ExtensionComponent[] {
+    const extensionPointIdString =
+      this.getExtensionPointIdString(extensionPointId);
+    return this.extensions.get(extensionPointIdString) || [];
   }
-  
+
+  /**
+   * Helper method to get a consistent string ID from an extension point
+   */
+  private getExtensionPointIdString(
+    extensionPointId: ExtensionPointId | string
+  ): string {
+    if (typeof extensionPointId === "string") {
+      return extensionPointId;
+    }
+
+    if (typeof extensionPointId === "object" && extensionPointId.id) {
+      return extensionPointId.id;
+    }
+
+    // Fallback for any unusual cases
+    return String(extensionPointId);
+  }
+
   /**
    * Get all registered plugins
    */
   getPlugins(): PluginModule[] {
     return Array.from(this.plugins.values());
   }
-  
+
   /**
    * Get a specific plugin by ID
    */
   getPlugin(pluginId: string): PluginModule | undefined {
     return this.plugins.get(pluginId);
   }
-  
+
   /**
    * Check if a plugin is registered
    */
   hasPlugin(pluginId: string): boolean {
     return this.plugins.has(pluginId);
   }
-  
+
   /**
    * Cleanup all registered plugins
    */
@@ -94,11 +120,11 @@ class PluginRegistry {
         }
       }
     }
-    
+
     this.plugins.clear();
     this.extensions.clear();
   }
 }
 
-// Create a singleton instance
-export const pluginRegistry = new PluginRegistry(); 
+// create a singleton instance
+export const pluginRegistry = new PluginRegistry();

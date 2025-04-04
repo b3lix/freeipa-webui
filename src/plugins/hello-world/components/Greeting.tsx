@@ -3,7 +3,7 @@ import React from "react";
 /**
  * A simple greeting component for the Hello World plugin
  */
-const Greeting: React.FC = () => {
+const Greeting = () => {
   return (
     <div className="pf-v5-c-card pf-m-compact" style={{ margin: "1rem 0" }}>
       <div

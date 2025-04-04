@@ -12,7 +12,7 @@ import { ExtensionSlot } from "src/core/plugins";
  * Dashboard page component that displays the main dashboard
  * and includes the dashboardContent extension point
  */
-const Dashboard: React.FC = () => {
+const Dashboard = () => {
   return (
     <Page>
       <PageSection variant="light">

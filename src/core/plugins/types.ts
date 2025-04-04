@@ -4,7 +4,7 @@ import React from "react";
 /**
  * Represents an extension point in the application where plugins can inject content
  */
-export interface ExtensionPoint<T = any> {
+export interface ExtensionPoint {
   id: string;
   displayName: string;
   description: string;
@@ -13,39 +13,32 @@ export interface ExtensionPoint<T = any> {
 /**
  * All available extension points in the application
  */
-export const extensionPoints = {
-  // Dashboard extension points
-  dashboardContent: {
-    id: "dashboardContent",
-    displayName: "Dashboard Content",
-    description: "Add content to the main dashboard",
-  } as ExtensionPoint,
+const dashboardContent: ExtensionPoint = {
+  id: "dashboardContent",
+  displayName: "Dashboard Content",
+  description: "Add content to the main dashboard",
+};
 
-  // User-related extension points
-  userDetailsContent: {
-    id: "userDetailsContent",
-    displayName: "User Details Content",
-    description: "Add content to the user details page",
-  } as ExtensionPoint,
+const userEditForm: ExtensionPoint = {
+  id: "userEditForm",
+  displayName: "User Edit Form",
+  description: "Add fields to the user edit form",
+};
 
-  userEditForm: {
-    id: "userEditForm",
-    displayName: "User Edit Form",
-    description: "Add fields to the user edit form",
-  } as ExtensionPoint,
-
-  // Navigation extension points
-  navigationItems: {
-    id: "navigationItems",
-    displayName: "Navigation Items",
-    description: "Add items to the main navigation",
-  } as ExtensionPoint,
+// Navigation extension points
+const navigationItems: ExtensionPoint = {
+  id: "navigationItems",
+  displayName: "Navigation Items",
+  description: "Add items to the main navigation",
 };
 
 /**
  * Type for extension point IDs
  */
-export type ExtensionPointId = keyof typeof extensionPoints;
+export type ExtensionPointId =
+  | typeof dashboardContent
+  | typeof userEditForm
+  | typeof navigationItems;
 
 /**
  * Base plugin interface with metadata
@@ -61,7 +54,7 @@ export interface Plugin {
 /**
  * Represents a component that extends a specific extension point
  */
-export interface ExtensionComponent<T = any> {
+export interface ExtensionComponent<T> {
   extensionPointId: ExtensionPointId;
   component: React.ComponentType<T>;
   priority?: number; // Higher priority will be rendered first
@@ -72,7 +65,7 @@ export interface ExtensionComponent<T = any> {
  * Complete plugin module interface
  */
 export interface PluginModule extends Plugin {
-  extensions: ExtensionComponent[];
+  extensions: ExtensionComponent<any>[];
 
   // Optional lifecycle hooks
   initialize?: () => void;
