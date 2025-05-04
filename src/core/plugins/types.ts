@@ -25,11 +25,10 @@ const userEditForm: ExtensionPoint = {
   description: "Add fields to the user edit form",
 };
 
-// Navigation extension points
-const navigationItems: ExtensionPoint = {
-  id: "navigationItems",
-  displayName: "Navigation Items",
-  description: "Add items to the main navigation",
+const hostGroupsTableColumns: ExtensionPoint = {
+  id: "hostGroupsTableColumns",
+  displayName: "Host Groups Table Columns",
+  description: "Add columns to the Host Groups table",
 };
 
 /**
@@ -38,7 +37,7 @@ const navigationItems: ExtensionPoint = {
 export type ExtensionPointId =
   | typeof dashboardContent
   | typeof userEditForm
-  | typeof navigationItems;
+  | typeof hostGroupsTableColumns;
 
 /**
  * Base plugin interface with metadata
@@ -54,23 +53,23 @@ export interface Plugin {
 /**
  * Represents a component that extends a specific extension point
  */
-export interface ExtensionComponent<T> {
+export interface ExtensionComponent {
   extensionPointId: ExtensionPointId;
-  component: React.ComponentType<T>;
-  priority?: number; // Higher priority will be rendered first
-  metadata?: Record<string, any>; // Additional metadata if needed
+  component: React.ComponentType;
+  priority?: number; // higher priority will be rendered first
+  metadata?: Record<string, any>; // additional metadata if needed
 }
 
 /**
  * Complete plugin module interface
  */
 export interface PluginModule extends Plugin {
-  extensions: ExtensionComponent<any>[];
+  extensions: ExtensionComponent[];
 
-  // Optional lifecycle hooks
+  // optional lifecycle hooks
   initialize?: () => void;
   cleanup?: () => void;
 
-  // Optional reducers for Redux integration
+  // optional reducers for Redux integration
   reducers?: Record<string, Reducer>;
 }

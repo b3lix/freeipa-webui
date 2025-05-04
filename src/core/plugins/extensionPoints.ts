@@ -15,18 +15,17 @@ export const userEditForm: ExtensionPoint = {
   description: "Add fields to the user edit form",
 };
 
-// Navigation extension points
-export const navigationItems: ExtensionPoint = {
-  id: "navigationItems",
-  displayName: "Navigation Items",
-  description: "Add items to the main navigation",
+export const hostGroupsTableColumns: ExtensionPoint = {
+  id: "hostGroupsTableColumns",
+  displayName: "Host Groups Table Columns",
+  description: "Add columns to the Host Groups table",
 };
 
 /**
- * Map of all extension points by ID, useful for lookups
+ * Map of all extension points by ID
  */
 export const extensionPointsMap = {
   dashboardContent,
   userEditForm,
-  navigationItems,
+  hostGroupsTableColumns,
 };
