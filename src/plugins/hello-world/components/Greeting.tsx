@@ -10,11 +10,12 @@ const Greeting = () => {
         className="pf-v5-c-card__title"
         style={{ fontSize: "1.5rem", fontWeight: "bold", color: "#06c" }}
       >
-        ✨ Hello World Plugin ✨
+        ✨ Hello World Plugin (HTML/CSS Styling) ✨
       </div>
       <div className="pf-v5-c-card__body">
         <p style={{ fontSize: "1.1rem", fontStyle: "italic", color: "#484" }}>
-          This content is provided by the Hello World plugin!
+          This content is provided by the Hello World plugin using HTML/CSS
+          styling!
         </p>
         <p
           style={{
