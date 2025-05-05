@@ -1,79 +1,19 @@
 import { PluginModule, ExtensionPointId, ExtensionComponent } from "./types";
 
 /**
- * Singleton registry that manages all plugins and their extensions
+ * Creates a plugin registry that manages all plugins and their extensions
  */
-class PluginRegistry {
-  private plugins: Map<string, PluginModule> = new Map();
-  private extensions: Map<string, ExtensionComponent[]> = new Map();
-
-  /**
-   * Register a plugin and all its extensions
-   */
-  registerPlugin(plugin: PluginModule): void {
-    if (this.plugins.has(plugin.id)) {
-      console.warn(`Plugin with ID "${plugin.id}" is already registered.`);
-      return;
-    }
-
-    // register the plugin
-    this.plugins.set(plugin.id, plugin);
-
-    // register all extensions from this plugin
-    for (const extension of plugin.extensions) {
-      this.registerExtension(extension);
-    }
-
-    // initialize plugin if needed
-    if (plugin.initialize) {
-      try {
-        plugin.initialize();
-      } catch (error) {
-        console.error(`Error initializing plugin "${plugin.id}":`, error);
-      }
-    }
-  }
-
-  /**
-   * Register a single extension
-   */
-  private registerExtension(extension: ExtensionComponent): void {
-    const { extensionPointId } = extension;
-
-    // Get the extension point ID string
-    const extensionPointIdString =
-      this.getExtensionPointIdString(extensionPointId);
-
-    if (!this.extensions.has(extensionPointIdString)) {
-      this.extensions.set(extensionPointIdString, []);
-    }
-
-    const extensions = this.extensions.get(
-      extensionPointIdString
-    ) as ExtensionComponent[];
-    extensions.push(extension);
-
-    // sort by priority if provided (higher priority first)
-    extensions.sort((a, b) => (b.priority || 0) - (a.priority || 0));
-  }
-
-  /**
-   * Get all extensions for a specific extension point
-   */
-  getExtensions(
-    extensionPointId: ExtensionPointId | string
-  ): ExtensionComponent[] {
-    const extensionPointIdString =
-      this.getExtensionPointIdString(extensionPointId);
-    return this.extensions.get(extensionPointIdString) || [];
-  }
+const createPluginRegistry = () => {
+  // private state
+  const plugins: Map<string, PluginModule> = new Map();
+  const extensions: Map<string, ExtensionComponent[]> = new Map();
 
   /**
    * Helper method to get a consistent string ID from an extension point
    */
-  private getExtensionPointIdString(
+  const getExtensionPointIdString = (
     extensionPointId: ExtensionPointId | string
-  ): string {
+  ): string => {
     if (typeof extensionPointId === "string") {
       return extensionPointId;
     }
@@ -82,49 +22,111 @@ class PluginRegistry {
       return extensionPointId.id;
     }
 
-    // Fallback for any unusual cases
+    // fallback for any unusual cases
     return String(extensionPointId);
-  }
+  };
 
   /**
-   * Get all registered plugins
+   * Register a single extension
    */
-  getPlugins(): PluginModule[] {
-    return Array.from(this.plugins.values());
-  }
+  const registerExtension = (extension: ExtensionComponent): void => {
+    const { extensionPointId } = extension;
 
-  /**
-   * Get a specific plugin by ID
-   */
-  getPlugin(pluginId: string): PluginModule | undefined {
-    return this.plugins.get(pluginId);
-  }
+    // get the extension point ID string
+    const extensionPointIdString = getExtensionPointIdString(extensionPointId);
 
-  /**
-   * Check if a plugin is registered
-   */
-  hasPlugin(pluginId: string): boolean {
-    return this.plugins.has(pluginId);
-  }
-
-  /**
-   * Cleanup all registered plugins
-   */
-  cleanup(): void {
-    for (const plugin of this.plugins.values()) {
-      if (plugin.cleanup) {
-        try {
-          plugin.cleanup();
-        } catch (error) {
-          console.error(`Error cleaning up plugin "${plugin.id}":`, error);
-        }
-      }
+    if (!extensions.has(extensionPointIdString)) {
+      extensions.set(extensionPointIdString, []);
     }
 
-    this.plugins.clear();
-    this.extensions.clear();
-  }
-}
+    const currentExtensions = extensions.get(
+      extensionPointIdString
+    ) as ExtensionComponent[];
+    currentExtensions.push(extension);
+
+    // sort by priority if provided (higher priority first)
+    currentExtensions.sort((a, b) => (b.priority || 0) - (a.priority || 0));
+  };
+
+  return {
+    /**
+     * Register a plugin and all its extensions
+     */
+    registerPlugin: (plugin: PluginModule): void => {
+      if (plugins.has(plugin.id)) {
+        console.warn(`Plugin with ID "${plugin.id}" is already registered.`);
+        return;
+      }
+
+      // register the plugin
+      plugins.set(plugin.id, plugin);
+
+      // register all extensions from this plugin
+      for (const extension of plugin.extensions) {
+        registerExtension(extension);
+      }
+
+      // initialize plugin if needed
+      if (plugin.initialize) {
+        try {
+          plugin.initialize();
+        } catch (error) {
+          console.error(`Error initializing plugin "${plugin.id}":`, error);
+        }
+      }
+    },
+
+    /**
+     * Get all extensions for a specific extension point
+     */
+    getExtensions: (
+      extensionPointId: ExtensionPointId | string
+    ): ExtensionComponent[] => {
+      const extensionPointIdString =
+        getExtensionPointIdString(extensionPointId);
+      return extensions.get(extensionPointIdString) || [];
+    },
+
+    /**
+     * Get all registered plugins
+     */
+    getPlugins: (): PluginModule[] => {
+      return Array.from(plugins.values());
+    },
+
+    /**
+     * Get a specific plugin by ID
+     */
+    getPlugin: (pluginId: string): PluginModule | undefined => {
+      return plugins.get(pluginId);
+    },
+
+    /**
+     * Check if a plugin is registered
+     */
+    hasPlugin: (pluginId: string): boolean => {
+      return plugins.has(pluginId);
+    },
+
+    /**
+     * Cleanup all registered plugins
+     */
+    cleanup: (): void => {
+      for (const plugin of plugins.values()) {
+        if (plugin.cleanup) {
+          try {
+            plugin.cleanup();
+          } catch (error) {
+            console.error(`Error cleaning up plugin "${plugin.id}":`, error);
+          }
+        }
+      }
+
+      plugins.clear();
+      extensions.clear();
+    },
+  };
+};
 
 // create a singleton instance
-export const pluginRegistry = new PluginRegistry();
+export const pluginRegistry = createPluginRegistry();
