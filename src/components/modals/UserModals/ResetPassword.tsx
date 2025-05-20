@@ -70,7 +70,7 @@ const ResetPassword = (props: PropsToResetPassword) => {
   // Fields
   const notLoggedInfields = [
     {
-      id: "reset-password-new-password",
+      id: "modal-form-reset-password-new-password",
       name: "New Password",
       pfComponent: (
         <PasswordInput
@@ -86,7 +86,7 @@ const ResetPassword = (props: PropsToResetPassword) => {
       ),
     },
     {
-      id: "reset-password-verify-password",
+      id: "modal-form-reset-password-verify-password",
       name: "Verify password",
       pfComponent: (
         <>
@@ -113,7 +113,7 @@ const ResetPassword = (props: PropsToResetPassword) => {
 
   const loggedInfields = [
     {
-      id: "reset-password-current-password",
+      id: "modal-form-reset-password-current-password",
       name: "Current Password",
       pfComponent: (
         <PasswordInput
@@ -129,7 +129,7 @@ const ResetPassword = (props: PropsToResetPassword) => {
       ),
     },
     {
-      id: "reset-password-new-password",
+      id: "modal-form-reset-password-new-password",
       name: "New Password",
       pfComponent: (
         <PasswordInput
@@ -145,7 +145,7 @@ const ResetPassword = (props: PropsToResetPassword) => {
       ),
     },
     {
-      id: "reset-password-verify-password",
+      id: "modal-form-reset-password-verify-password",
       name: "Verify password",
       pfComponent: (
         <>
@@ -169,7 +169,7 @@ const ResetPassword = (props: PropsToResetPassword) => {
       ),
     },
     {
-      id: "reset-password-otp",
+      id: "modal-form-reset-password-otp",
       name: "OTP",
       pfComponent: (
         <TextInput
@@ -245,7 +245,7 @@ const ResetPassword = (props: PropsToResetPassword) => {
 
       resetPassword(payload).then((response) => {
         if ("data" in response) {
-          if (response.data.result) {
+          if (response.data?.result) {
             // Close modal
             resetFieldsAndCloseModal();
             // Refresh data
@@ -256,7 +256,7 @@ const ResetPassword = (props: PropsToResetPassword) => {
               "Changed password for user '" + props.uid + "'",
               "success"
             );
-          } else if (response.data.error) {
+          } else if (response.data?.error) {
             // Set alert: error
             const errorMessage = response.data.error as ErrorResult;
             alerts.addAlert(

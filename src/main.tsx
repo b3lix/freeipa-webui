@@ -1,5 +1,5 @@
-import React from "react";
-import ReactDOM from "react-dom";
+import React, { useEffect } from "react";
+import ReactDOM from "react-dom/client";
 import App from "./App";
 import "./main.css";
 // react router dom
@@ -15,14 +15,28 @@ import "@patternfly/patternfly/utilities/Display/display.css";
 import "@patternfly/patternfly/utilities/Accessibility/accessibility.css";
 // Navigation
 import { URL_PREFIX } from "./navigation/NavRoutes";
+// Plugins
+import { registerAllPlugins } from "./plugins";
 
-ReactDOM.render(
+// wrapper component to register plugins after rendering
+function AppWithPlugins() {
+  useEffect(() => {
+    registerAllPlugins();
+  }, []);
+
+  return <App />;
+}
+
+const root = ReactDOM.createRoot(
+  document.getElementById("root") as HTMLElement
+);
+
+root.render(
   <Provider store={store}>
     <React.StrictMode>
       <BrowserRouter basename={URL_PREFIX}>
-        <App />
+        <AppWithPlugins />
       </BrowserRouter>
     </React.StrictMode>
-  </Provider>,
-  document.getElementById("root")
+  </Provider>
 );

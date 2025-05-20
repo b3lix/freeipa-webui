@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import React from "react";
 // Data type
 import {
@@ -23,6 +21,7 @@ import {
   AutomemberEntry,
   PwPolicy,
   IDPServer,
+  CertificateMapping,
 } from "./datatypes/globalDataTypes";
 // Errors
 import { FetchBaseQueryError } from "@reduxjs/toolkit/dist/query";
@@ -125,6 +124,9 @@ export const isPwPolicySelectable = (pwPolicy: PwPolicy) => pwPolicy.cn !== "";
 
 export const isIdpServerSelectable = (idpServer: IDPServer) =>
   idpServer.cn !== "";
+
+export const isCertMapSelectable = (certMap: CertificateMapping) =>
+  certMap.cn !== "";
 
 // Write JSX error messages into 'apiErrorsJsx' array
 export const apiErrorToJsXError = (
@@ -433,3 +435,14 @@ export function containsAny(array1: unknown[], array2: unknown[]): boolean {
  * Returns hidden password string
  */
 export const HIDDEN_PASSWORD = "********";
+
+/**
+ * Remove certificate delimiters
+  - This is needed to process the certificate in the API call
+ */
+export const removeCertificateDelimiters = (certificate: string) => {
+  return certificate
+    .replace(/-----BEGIN CERTIFICATE-----/g, "")
+    .replace(/-----END CERTIFICATE-----/g, "")
+    .replace(/\n/g, "");
+};

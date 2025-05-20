@@ -117,10 +117,10 @@ const PasswordPolicySettings = (props: PropsToPwPolicySettings) => {
     savePwPolicy(payload).then((response) => {
       if ("data" in response) {
         const data = response.data;
-        if (data.error) {
+        if (data?.error) {
           alerts.addAlert("error", (data.error as Error).message, "danger");
         }
-        if (data.result) {
+        if (data?.result) {
           props.onPwPolicyChange(data.result.result);
           alerts.addAlert(
             "success",
@@ -187,7 +187,7 @@ const PasswordPolicySettings = (props: PropsToPwPolicySettings) => {
             <Flex direction={{ default: "column", lg: "row" }}>
               <FlexItem flex={{ default: "flex_1" }}>
                 <Form className="pf-v5-u-mb-lg">
-                  <FormGroup label="Group" fieldId="group">
+                  <FormGroup label="Group" fieldId="group" role="group">
                     <IpaTextContent
                       name={"cn"}
                       ariaLabel={"Group"}

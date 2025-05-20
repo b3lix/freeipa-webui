@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState } from "react";
 // PatternFly
 import {
@@ -32,6 +31,8 @@ import IpaCalendar from "../Form/IpaCalendar";
 import IpaSshPublicKeys from "../Form/IpaSshPublicKeys";
 import IpaCertificates from "../Form/IpaCertificates";
 import IpaCertificateMappingData from "../Form/IpaCertificateMappingData";
+import { ExtensionSlot } from "src/core/plugins/ExtensionSlot";
+import { userEditForm } from "src/core/plugins/extensionPoints";
 
 interface PropsToUsersAccountSettings {
   user: Partial<User>;
@@ -152,6 +153,7 @@ const UsersAccountSettings = (props: PropsToUsersAccountSettings) => {
             <FormGroup
               label="Password expiration"
               fieldId="krbpasswordexpiration"
+              role="group"
             >
               <IpaCalendar
                 name={"krbpasswordexpiration"}
@@ -185,6 +187,7 @@ const UsersAccountSettings = (props: PropsToUsersAccountSettings) => {
             <FormGroup
               label="Kerberos principal alias"
               fieldId="krbprincipalname"
+              role="group"
             >
               <PrincipalAliasMultiTextBox
                 ipaObject={ipaObject}
@@ -196,6 +199,7 @@ const UsersAccountSettings = (props: PropsToUsersAccountSettings) => {
             <FormGroup
               label="Kerberos principal expiration (UTC)"
               fieldId="krbprincipalexpiration"
+              role="group"
             >
               <IpaCalendar
                 name={"krbprincipalexpiration"}
@@ -216,6 +220,16 @@ const UsersAccountSettings = (props: PropsToUsersAccountSettings) => {
                 metadata={props.metadata}
               />
             </FormGroup>
+
+            {/* Extension point for user edit form from plugins */}
+            <ExtensionSlot
+              extensionPointId={userEditForm}
+              context={{
+                user: props.user,
+                onChange: recordOnChange,
+                isReadOnly: false,
+              }}
+            />
           </Form>
         </FlexItem>
         <FlexItem flex={{ default: "flex_1" }} className="pf-v5-u-w-50">
@@ -230,7 +244,11 @@ const UsersAccountSettings = (props: PropsToUsersAccountSettings) => {
                 metadata={props.metadata}
               />
             </FormGroup>
-            <FormGroup label="SSH public keys" fieldId="ipasshpubkey">
+            <FormGroup
+              label="SSH public keys"
+              fieldId="ipasshpubkey"
+              role="group"
+            >
               <IpaSshPublicKeys
                 ipaObject={ipaObject}
                 onChange={recordOnChange}
@@ -239,7 +257,11 @@ const UsersAccountSettings = (props: PropsToUsersAccountSettings) => {
                 from={props.from}
               />
             </FormGroup>
-            <FormGroup label="Certificates" fieldId="usercertificate">
+            <FormGroup
+              label="Certificates"
+              fieldId="usercertificate"
+              role="group"
+            >
               <IpaCertificates
                 ipaObject={ipaObject}
                 objectType="user"
@@ -252,6 +274,7 @@ const UsersAccountSettings = (props: PropsToUsersAccountSettings) => {
             <FormGroup
               label="Certificate mapping data"
               fieldId="ipacertmapdata"
+              role="group"
               labelIcon={
                 <PopoverWithIconLayout
                   message={certificateMappingDataMessage}
@@ -274,6 +297,7 @@ const UsersAccountSettings = (props: PropsToUsersAccountSettings) => {
             <FormGroup
               label="User authentication types"
               fieldId="ipauserauthtype"
+              role="group"
               labelIcon={
                 <PopoverWithIconLayout message={userAuthTypesMessage} />
               }
@@ -317,7 +341,7 @@ const UsersAccountSettings = (props: PropsToUsersAccountSettings) => {
               fieldId="ipatokenradiusconfiglink"
             >
               <IpaSelect
-                id="radius-proxy-configuration"
+                id="ipatokenradiusconfiglink"
                 name="ipatokenradiusconfiglink"
                 options={radiusProxyList}
                 ipaObject={ipaObject}
@@ -344,7 +368,7 @@ const UsersAccountSettings = (props: PropsToUsersAccountSettings) => {
               fieldId="ipaidpconfiglink"
             >
               <IpaSelect
-                id="external-idp-configuration"
+                id="ipaidpconfiglink"
                 name="ipaidpconfiglink"
                 options={idpConfOptions}
                 ipaObject={ipaObject}
@@ -367,6 +391,7 @@ const UsersAccountSettings = (props: PropsToUsersAccountSettings) => {
         </FlexItem>
       </Flex>
       <ModalWithTextAreaLayout
+        id="certificate-textarea"
         value={textAreaCertificatesValue}
         onChange={onChangeTextAreaCertificatesValue}
         isOpen={isTextAreaCertificatesOpen}

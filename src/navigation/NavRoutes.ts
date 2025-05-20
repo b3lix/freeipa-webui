@@ -49,6 +49,9 @@ const PasswordPoliciesGroupRef = "password-policies";
 const KerberosTicketPolicyGroupRef = "kerberos-ticket-policy";
 // AUTHENTICATION
 const IdentityProviderReferencesGroupRef = "identity-provider-references";
+const CertificateMappingGroupRef = "cert-id-mapping-rules";
+const CertificateMappingConfigGroupRef = "cert-id-mapping-global-config";
+const CertificateMappingMatchGroupRef = "cert-id-mapping-match";
 // IPA SERVER
 // - Configuration
 const ConfigRef = "configuration";
@@ -299,6 +302,35 @@ export const navigationRoutes = [
         title: `${BASE_TITLE} - Identity Provider references`,
         path: "identity-provider-references",
         items: [],
+      },
+      {
+        label: "Certificate mapping",
+        group: CertificateMappingGroupRef,
+        title: `${BASE_TITLE} - Certificate mapping`,
+        path: "",
+        items: [
+          {
+            label: "Certificate identity mapping rules",
+            group: CertificateMappingGroupRef,
+            title: `${BASE_TITLE} - Certificate identity mapping rules`,
+            path: "cert-id-mapping-rules",
+            items: [],
+          },
+          {
+            label: "Certificate identity mapping global configuration",
+            group: CertificateMappingConfigGroupRef,
+            title: `${BASE_TITLE} - Certificate identity mapping global configuration`,
+            path: "cert-id-mapping-global-config",
+            items: [],
+          },
+          {
+            label: "Certificate identity mapping match",
+            group: CertificateMappingMatchGroupRef,
+            title: `${BASE_TITLE} - Certificate identity mapping match`,
+            path: "cert-id-mapping-match",
+            items: [],
+          },
+        ],
       },
     ],
   },

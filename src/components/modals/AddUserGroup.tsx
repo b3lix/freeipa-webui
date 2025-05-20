@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from "react";
 // PatternFly
 import {
@@ -87,7 +86,7 @@ const AddUserGroup = (props: PropsToAddGroup) => {
   // List of fields
   const fields = [
     {
-      id: "group-name",
+      id: "modal-form-group-name",
       name: "Group name",
       pfComponent: (
         <>
@@ -112,7 +111,7 @@ const AddUserGroup = (props: PropsToAddGroup) => {
       ),
     },
     {
-      id: "group-desc",
+      id: "modal-form-group-desc",
       name: "Description",
       pfComponent: (
         <TextArea
@@ -126,10 +125,11 @@ const AddUserGroup = (props: PropsToAddGroup) => {
       ),
     },
     {
-      id: "group-type",
+      id: "modal-form-group-type",
       name: "Group type",
       pfComponent: (
         <FormSelect
+          id="modal-form-group-type"
           value={groupType}
           onChange={onGroupTypeSelect}
           aria-label="Group type selection"
@@ -142,7 +142,7 @@ const AddUserGroup = (props: PropsToAddGroup) => {
       ),
     },
     {
-      id: "group-gid",
+      id: "modal-form-group-gid",
       name: "GID",
       pfComponent: (
         <>

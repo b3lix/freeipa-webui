@@ -9,6 +9,7 @@ import DataSpinner from "src/components/layouts/DataSpinner";
 import { useAppSelector } from "src/store/hooks";
 
 // PAGE COMPONENTS
+import Dashboard from "src/pages/Dashboard/Dashboard";
 import ActiveUsers from "src/pages/ActiveUsers/ActiveUsers";
 import ActiveUsersTabs from "src/pages/ActiveUsers/ActiveUsersTabs";
 import StageUsers from "src/pages/StageUsers/StageUsers";
@@ -57,6 +58,10 @@ import SubIdsTabs from "src/pages/SubordinateIDs/SubIdsTabs";
 import PasswordPoliciesTabs from "src/pages/PasswordPolicies/PasswordPoliciesTabs";
 import IdpReferences from "src/pages/IdPReferences/IdpReferences";
 import IdpReferencesTabs from "src/pages/IdPReferences/IdpReferencesTabs";
+import CertificateMappingPage from "src/pages/CertificateMapping/CertificateMapping";
+import CertificateMappingGlobalConfig from "src/pages/CertificateMapping/CertificateMappingGlobalConfig";
+import CertificateMappingMatch from "src/pages/CertificateMapping/CertificateMappingMatch";
+import CertificateMappingTabs from "src/pages/CertificateMapping/CertificateMappingTabs";
 
 // Renders routes (React)
 export const AppRoutes = ({ isInitialDataLoaded }): React.ReactElement => {
@@ -71,6 +76,8 @@ export const AppRoutes = ({ isInitialDataLoaded }): React.ReactElement => {
         <Routes>
           {userLoggedIn ? (
             <>
+              {/* Dashboard Route */}
+              <Route path="" element={<Dashboard />} />
               <Route path="active-users">
                 <Route path="" element={<ActiveUsers />} />
                 <Route path=":uid">
@@ -438,6 +445,21 @@ export const AppRoutes = ({ isInitialDataLoaded }): React.ReactElement => {
                     element={<IdpReferencesTabs section="settings" />}
                   />
                 </Route>
+              </Route>
+              <Route path="cert-id-mapping-rules">
+                <Route path="" element={<CertificateMappingPage />} />
+                <Route path=":cn">
+                  <Route
+                    path=""
+                    element={<CertificateMappingTabs section="settings" />}
+                  />
+                </Route>
+              </Route>
+              <Route path="cert-id-mapping-global-config">
+                <Route path="" element={<CertificateMappingGlobalConfig />} />
+              </Route>
+              <Route path="cert-id-mapping-match">
+                <Route path="" element={<CertificateMappingMatch />} />
               </Route>
               <Route path="configuration" element={<Configuration />} />
               {/* Redirect to Active users page if user is logged in and navigates to the root page */}

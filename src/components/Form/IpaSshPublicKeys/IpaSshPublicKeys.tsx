@@ -132,7 +132,7 @@ const IpaSshPublicKeys = (props: PropsToSshPublicKeysModal) => {
 
     updateSSHKey(payload).then((response) => {
       if ("data" in response) {
-        if (response.data.result) {
+        if (response.data?.result) {
           // Set alert: success
           alerts.addAlert(
             "remove-ssh-public-key-success",
@@ -143,10 +143,9 @@ const IpaSshPublicKeys = (props: PropsToSshPublicKeysModal) => {
           const newSshPublicKeysList = [...sshPublicKeysList];
           newSshPublicKeysList.splice(idx, 1);
           setSshPublicKeysList(newSshPublicKeysList);
-          console.log(newSshPublicKeysList);
           // Close things up and refresh
           setIsDeletionModalOpen(false);
-        } else if (response.data.error) {
+        } else if (response.data?.error) {
           // Set alert: error
           const errorMessage = response.data.error as ErrorResult;
           alerts.addAlert(
@@ -198,7 +197,7 @@ const IpaSshPublicKeys = (props: PropsToSshPublicKeysModal) => {
 
     updateSSHKey(payload).then((response) => {
       if ("data" in response) {
-        if (response.data.result) {
+        if (response.data?.result) {
           // Close the modal
           setIsTextAreaSshPublicKeysOpen(false);
           // Set alert: success
@@ -211,7 +210,7 @@ const IpaSshPublicKeys = (props: PropsToSshPublicKeysModal) => {
           const newSshPublicKeysList = [...sshPublicKeysList];
           newSshPublicKeysList.push(textAreaSshPublicKeysValue);
           setSshPublicKeysList(newSshPublicKeysList);
-        } else if (response.data.error) {
+        } else if (response.data?.error) {
           // Set alert: error
           const errorMessage = response.data.error as ErrorResult;
           alerts.addAlert(
@@ -340,10 +339,15 @@ const IpaSshPublicKeys = (props: PropsToSshPublicKeysModal) => {
         actions={modal_actions}
       >
         <Form>
-          <FormGroup label="SSH public key:" type="string" fieldId="selection">
+          <FormGroup
+            label="SSH public key:"
+            type="string"
+            fieldId="ipasshpubkey"
+          >
             <TextArea
+              id="ipasshpubkey"
               value={textAreaSshPublicKeysValue}
-              name={"ipasshpubkey"}
+              name="ipasshpubkey"
               onChange={(_event, value: string) =>
                 onChangeTextAreaSshPublicKeysValue(value)
               }

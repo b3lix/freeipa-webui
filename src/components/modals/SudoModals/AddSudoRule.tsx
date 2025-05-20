@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from "react";
 // PatternFly
 import {
@@ -56,7 +55,7 @@ const AddSudoRule = (props: PropsToAddGroup) => {
   // List of fields
   const fields = [
     {
-      id: "rule-name",
+      id: "modal-form-rule-name",
       name: "Rule name",
       pfComponent: (
         <>
@@ -79,7 +78,7 @@ const AddSudoRule = (props: PropsToAddGroup) => {
       ),
     },
     {
-      id: "rule-desc",
+      id: "modal-form-rule-desc",
       name: "Description",
       pfComponent: (
         <TextArea

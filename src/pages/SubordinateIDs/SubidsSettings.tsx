@@ -82,11 +82,11 @@ const SubidSettings = (props: PropsToSubidSettings) => {
     subidMod(payload).then((response) => {
       if ("data" in response) {
         const data = response.data;
-        if (data.error) {
+        if (data?.error) {
           alerts.addAlert("error", (data.error as Error).message, "danger");
         }
 
-        if (data.result) {
+        if (data?.result) {
           props.onSubIdChange(data.result.result);
           alerts.addAlert(
             "success",
@@ -152,7 +152,7 @@ const SubidSettings = (props: PropsToSubidSettings) => {
             <Flex direction={{ default: "column", lg: "row" }}>
               <FlexItem flex={{ default: "flex_1" }}>
                 <Form className="pf-v5-u-mb-lg">
-                  <FormGroup label="Unique ID" fieldId="unique-id">
+                  <FormGroup label="Unique ID" fieldId="ipauniqueid">
                     <IpaTextInput
                       name={"ipauniqueid"}
                       ariaLabel={"Unique ID"}
@@ -172,7 +172,7 @@ const SubidSettings = (props: PropsToSubidSettings) => {
                       metadata={props.metadata}
                     />
                   </FormGroup>
-                  <FormGroup label="Owner" fieldId="ipaowner">
+                  <FormGroup label="Owner" fieldId="ipaowner" role="group">
                     <IpaTextContent
                       name={"ipaowner"}
                       ariaLabel={"Owner"}

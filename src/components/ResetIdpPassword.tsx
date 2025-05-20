@@ -75,7 +75,7 @@ const ResetIdpPassword = (props: PropsToResetIdpPassword) => {
   // Fields
   const fields = [
     {
-      id: "reset-password-new-password",
+      id: "modal-form-reset-password-new-password",
       name: "New Password",
       pfComponent: (
         <PasswordInput
@@ -91,7 +91,7 @@ const ResetIdpPassword = (props: PropsToResetIdpPassword) => {
       ),
     },
     {
-      id: "reset-password-verify-password",
+      id: "modal-form-reset-password-verify-password",
       name: "Verify password",
       pfComponent: (
         <>
@@ -142,10 +142,10 @@ const ResetIdpPassword = (props: PropsToResetIdpPassword) => {
     resetPassword(payload).then((response) => {
       if ("data" in response) {
         const data = response.data;
-        if (data.error) {
+        if (data?.error) {
           alerts.addAlert("error", (data.error as Error).message, "danger");
         }
-        if (data.result) {
+        if (data?.result) {
           props.onIdpRefChange(data.result.result);
           alerts.addAlert(
             "success",

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState } from "react";
 // PatternFly
 import {
@@ -56,7 +55,7 @@ const AddHBACService = (props: PropsToAddGroup) => {
   // List of fields
   const fields = [
     {
-      id: "service-name",
+      id: "modal-form-service-name",
       name: "Service name",
       pfComponent: (
         <>
@@ -81,7 +80,7 @@ const AddHBACService = (props: PropsToAddGroup) => {
       ),
     },
     {
-      id: "service-desc",
+      id: "modal-form-service-desc",
       name: "Description",
       pfComponent: (
         <TextArea

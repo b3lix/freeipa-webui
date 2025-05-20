@@ -4,7 +4,7 @@ import { When, Then, Given } from "@badeball/cypress-cucumber-preprocessor";
 Given("I am on {string} page", (handle: string) => {
   cy.url().then(($url) => {
     if (!$url.includes(handle)) {
-      cy.visit(Cypress.env("base_url") + "/" + handle, { timeout: 6000 });
+      cy.visit(Cypress.env("base_url") + "/" + handle, { timeout: 10000 });
     }
   });
 });
@@ -34,26 +34,10 @@ Given(
 
 // login
 Given("I am logged in as {string}", (username: string) => {
-  cy.wait(1000);
-  cy.url().then(($url) => {
-    if ($url.includes("modern_ui/login")) {
-      cy.loginAsAnUser(
-        Cypress.env("admin_login"),
-        Cypress.env("admin_password")
-      );
-    }
-  });
   cy.get(
     "div.pf-v5-c-masthead__content button span.pf-v5-c-menu-toggle__text",
     { timeout: 6000 }
-  ).then(($ele) => {
-    if ($ele.text() !== username) {
-      cy.loginAsAnUser(
-        Cypress.env("admin_login"),
-        Cypress.env("admin_password")
-      );
-    }
-  });
+  ).then(($ele) => $ele.text() === username);
 });
 
 When(
@@ -63,7 +47,6 @@ When(
   }
 );
 
-// eslint-disable-next-line @typescript-eslint/no-empty-function
 When("I logout", () => {});
 
 // Side menu
@@ -188,7 +171,7 @@ When(
       .contains(regex)
       .parent()
       .then(($label) => {
-        cy.get("#modal-form-" + $label.attr("for")).type(content);
+        cy.get("#" + $label.attr("for")).type(content);
       });
   }
 );
@@ -411,13 +394,14 @@ When(
   (checkboxName: string, section: string) => {
     const sectionRegex = new RegExp("^" + section + "$", "i");
     // Intentionally not using regex matching for the checkbox name as these elements often contain parentheses
-    cy.get("div.pf-v5-c-form__group-label")
-      .contains(sectionRegex)
+    cy.get("span[class='pf-v5-c-form__label-text']")
+      .contains(section)
+      .parent()
+      .parent()
       .next()
       .get("div.pf-v5-c-check")
       .find("label")
       .contains(checkboxName)
-      .prev()
       .click();
   }
 );
@@ -617,8 +601,9 @@ When(
   (buttonName: string, section: string) => {
     const sectionRegex = new RegExp("^" + section + "$", "i");
     const buttonRegex = new RegExp("^" + buttonName + "$", "i");
-    cy.get("div.pf-v5-c-form__group-label")
+    cy.get("span[class='pf-v5-c-form__label-text']")
       .contains(sectionRegex)
+      .parent()
       .parent()
       .next()
       .find("button")
@@ -635,6 +620,7 @@ When(
     cy.get("div.pf-v5-c-form__group-label")
       .contains(sectionRegex)
       .parent()
+      .parent()
       .next()
       .find("input[value='" + text + "']")
       .parent()
@@ -649,12 +635,13 @@ When(
 Then(
   "I should not see value {string} in any of the textboxes that belong to the field {string}",
   (value: string, fieldName: string) => {
-    cy
-      .get("div.pf-v5-c-form__group-label")
+    cy.get("span[class='pf-v5-c-form__label-text'")
       .contains(fieldName)
       .parent()
+      .parent()
       .next()
-      .find("input[value='" + value + "']").not;
+      .find("input[value='" + value + "']")
+      .should("not.exist");
   }
 );
 
@@ -664,6 +651,7 @@ Then(
     const regex = new RegExp("^" + fieldName + "$", "i");
     cy.get("div.pf-v5-c-form__group-label")
       .contains(regex)
+      .parent()
       .parent()
       .next()
       .find("input[value='" + text + "']")
@@ -678,6 +666,7 @@ Then(
     cy.get("div.pf-v5-c-form__group-label")
       .contains(regex)
       .parent()
+      .parent()
       .next()
       .find("input[value='" + value + "']");
   }
@@ -689,6 +678,7 @@ Then(
     const regex = new RegExp("^" + fieldName + "$", "i");
     cy.get("div.pf-v5-c-form__group-label")
       .contains(regex)
+      .parent()
       .parent()
       .next()
       .find("input")
@@ -741,15 +731,7 @@ Then(
 );
 
 When("I click on the arrow icon to perform search in modal", () => {
-  cy.get("[role=dialog] button[aria-label=Search]", { timeout: 10000 })
-    .eq(0)
-    .click();
-  /**
-   * Sometimes hooks do not complete their event handlers because the
-   * Cypress test hogs the Javascript thread, and cy.wait(0) releases the
-   * thread so that React hooks can complete the click() action.
-   */
-  cy.wait(0);
+  cy.get("[role=dialog] button[aria-label=Search]").eq(0).click();
 });
 
 Then("I click on the X icon to clear the modal search field", () => {
@@ -842,3 +824,25 @@ Then(
       .get("button[aria-pressed=true]");
   }
 );
+
+// Assert element is on table
+Given(
+  "The {string} element exists in the table with ID {string} located in page {string}",
+  (name: string, tableId: string, page: string) => {
+    const getElementOnTable = () => {
+      cy.get("table#" + tableId)
+        .find("tr[id='" + name + "']")
+        .should("be.visible");
+    };
+    cy.url().then(($url) => {
+      if (!$url.includes(page)) {
+        cy.visit(Cypress.env("base_url") + "/" + page).then(getElementOnTable);
+      }
+    });
+  }
+);
+
+// Waiting time
+Then("I wait for {int} seconds", (seconds: number) => {
+  cy.wait(seconds * 1000);
+});

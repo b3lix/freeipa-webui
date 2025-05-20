@@ -39,6 +39,15 @@ Cypress.Commands.add("loginAsAnUser", (username: string, password: string) => {
   cy.visit(Cypress.env("base_url"));
 });
 
+Cypress.Commands.add("logout", () => {
+  cy.get(".pf-v5-c-menu-toggle__text")
+    .first()
+    .click()
+    .then(() => {
+      cy.get(".pf-v5-c-menu__item").contains("Log out").click();
+    });
+});
+
 Cypress.Commands.add("userCleanup", () => {
   cy.get("tr[id=admin]", { timeout: 10000 }).should("be.visible");
   cy.get('input[aria-label="Select all"]').check();
@@ -65,19 +74,19 @@ Cypress.Commands.add("createTestUser", (username: string) => {
           .contains("User login")
           .parent()
           .then(($label) => {
-            cy.get("#modal-form-" + $label.attr("for")).type(username);
+            cy.get("#" + $label.attr("for")).type(username);
           });
         cy.get("[role=dialog] label")
           .contains("First name")
           .parent()
           .then(($label) => {
-            cy.get("#modal-form-" + $label.attr("for")).type("Arctic");
+            cy.get("#" + $label.attr("for")).type("Arctic");
           });
         cy.get("[role=dialog] label")
           .contains("Last name")
           .parent()
           .then(($label) => {
-            cy.get("#modal-form-" + $label.attr("for")).type("Asbestos");
+            cy.get("#" + $label.attr("for")).type("Asbestos");
           });
         cy.get("[role=dialog] button").contains("Add").click();
       }
